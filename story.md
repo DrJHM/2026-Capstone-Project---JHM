@@ -7,7 +7,7 @@
 
 ## Executive Summary
 
-Historically Black Colleges and Universities (HBCUs) have steadily invested in mainstream student success platforms — yet the retention gap between HBCUs and comparable Predominantly White Institutions (PWIs) has held at roughly 10.5 to 10.6 percentage points across eight consecutive years of platform adoption. This study draws on IPEDS outcomes data, NACUBO endowment figures, and platform adoption records across 51 institutions (26 HBCUs, 25 matched PWIs) to examine which institution-level indicators most strongly predict first-year retention and six-year graduation rates at HBCUs. Using a Random Forest model, the analysis reveals that **endowment per student** (importance score: 0.4571) far outpredicts platform adoption (Navigate: 0.0364), while widely adopted tools like Early Alert, Starfish, and Workday Student scored 0. The central finding is clear: the tools HBCUs are buying were not designed for the students HBCUs serve. A purpose-built, culturally responsive, resource-aware student success platform is not a product enhancement — it is an equity imperative.
+Historically Black Colleges and Universities (HBCUs) have steadily invested in mainstream student success platforms — yet the retention gap between HBCUs and comparable Predominantly White Institutions (PWIs) has held at roughly 10.5 to 10.6 percentage points across eight consecutive years of platform adoption. This study draws on IPEDS outcomes data, NACUBO endowment figures, and platform adoption records across 51 institutions (26 HBCUs, 25 matched PWIs) to examine which institution-level indicators most strongly predict first-year retention and six-year graduation rates at HBCUs. Using a Random Forest model, the analysis reveals that **endowment per student** (importance score: 0.4571) far outpredicts platform adoption (Navigate: 0.0364), while widely adopted tools like Early Alert, Starfish, and Workday Student have an importance score of 0. The central finding is clear: the tools HBCUs are buying were not designed for the students HBCUs serve. A purpose-built, culturally responsive, resource-aware student success platform is not a product enhancement — it is an equity imperative.
 
 ---
 
@@ -18,7 +18,7 @@ This is an **interactive, 7-slide data story** built in Flourish. Here is how to
 - **Arrow buttons** (← →) at the top of each slide move you forward and backward through the narrative.
 - **Hover** over data points, bars, and chart elements to reveal tooltips with institution-specific details and exact values.
 - **Toggle legend items** (e.g., HBCU / PWI) by clicking them to isolate or compare groups.
-- Each slide builds on the one before it — follow the slides **in order** for the full argument.
+- Each slide builds on the one before it — follow the slides in order for the full argument.
 - If the visualization does not load, scroll down for the slide-by-slide written summary.
 
 ---
@@ -31,13 +31,13 @@ This is an **interactive, 7-slide data story** built in Flourish. Here is how to
     frameborder="0"
     scrolling="no"
     style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
-    title="Capstone Project: When the Tools Don't Fit — Student Success Platforms and the HBCU Gap"
+    title="Capstone Project: When the Tools Don't Fit — Student Success Platforms and the HBCU Gap."
     allowfullscreen>
   </iframe>
 </div>
 
-> **Note:** If you are viewing this on GitHub's raw file preview, the embed will not render.
-> To view the fully interactive version, visit the [GitHub Pages site](../../) or open the [Flourish story directly](https://public.flourish.studio/story/3657641/).
+>
+> To view the fully interactive version, visit [Flourish story directly](https://public.flourish.studio/story/3657641/).
 
 ---
 
