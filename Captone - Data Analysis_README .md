@@ -85,7 +85,7 @@ Raw IPEDS-formatted strings (e.g., `"78%"`, `"$14,100"`, `"Yes/No"`) are parsed 
 
 ### Section 4 — Summary & Capstone Implications
 
-The evidence reinforces the central VanguardScholar thesis:
+The evidence reinforces the central thesis:
 
 > *The graduation and retention gaps between HBCUs and PWIs are statistically robust, structurally rooted in resource inequity, and cannot be closed through platform adoption alone. A purpose-built HBCU student success platform must account for the full structural profile of HBCU students — including basic needs burden, first-generation status, and Pell dependency — in ways that commercially dominant PWI platforms do not.*
 
@@ -138,7 +138,7 @@ jupyter notebook Spring_2026_-_Capstone.ipynb
 
 ## Author
 **Joycelyn Hughes-Moulden**
-DATA 802 Capstone | Howard University | Spring 2026
+DATA 801 Capstone Project | Howard University | Spring 2026
 
 ---
 
