@@ -1,6 +1,6 @@
 # When the Tools Don't Fit: Student Success Platforms and the HBCU Retention Gap
 
-> **Capstone Project | DATA 801 Capstone Project | Howard University**
+> **Capstone Project | DATA 801 | Howard University**
 > Dr. Joycelyn Hughes-Moulden | Spring 2026
 
 ---
