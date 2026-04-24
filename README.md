@@ -10,16 +10,16 @@
 This repository contains the statistical foundation of my capstone project as a student of Howard University's Applied Data Science and Analytics Master's Program. This study advances a central argument: _Historically Black Colleges and Universities (HBCUs) are currently underserved by commercially dominant student success platforms designed around the demographic and institutional profiles of Predominantly White Institutions (PWIs). A purpose-built HBCU student success platform is not merely preferable; it is **structurally necessary**._
 ---
 
-## Research Questions
+## Primary Research Questions
 
-1. Do student success platforms that are designed for PWIs help HBCUs close gaps in retention and graduation rates? If not, what type of student success platform 
-would be more effective for HBCUs?
+1. Do student success platforms designed for PWIs help HBCUs close gaps in retention and graduation rates?
+2. If not, what type of student success platform would be more effective for HBCUs?
 
 **_## Deeper Inquiry_**
 
-3. Which institution-level academic and student support indicators correlate most strongly with **first-year retention** and **six-year graduation rates** at HBCUs?
-4. Do HBCUs and PWIs differ significantly on key student success outcomes — and if so, does the pattern suggest that platform adoption alone cannot close the gap?
-5. What structural data quality issues (multicollinearity, imbalance, missing data) must be diagnosed and remediated before building predictive ML models?
+1. Which institution-level academic and student support indicators correlate most strongly with first-year retention and six-year graduation rates at HBCUs?
+2. Do HBCUs and PWIs differ significantly on key student success outcomes — and if so, does the pattern suggest that platform adoption alone cannot close the gap?
+3. What structural data quality issues (multicollinearity, imbalance, missing data) must be diagnosed and remediated before building predictive ML models?
 
 To answer these questions, this study identifies which institution-level academic and student support indicators are most strongly associated with first-year retention and six-year graduation rates at HBCUs, findings that will inform the design of a cohesive, data-driven student success platform tailored to the HBCU context.
 ---
