@@ -21,6 +21,7 @@ would be more effective for HBCUs?
 4. Do HBCUs and PWIs differ significantly on key student success outcomes — and if so, does the pattern suggest that platform adoption alone cannot close the gap?
 5. What structural data quality issues (multicollinearity, imbalance, missing data) must be diagnosed and remediated before building predictive ML models?
 
+To answer these questions, this study identifies which institution-level academic and student support indicators are most strongly associated with first-year retention and six-year graduation rates at HBCUs, findings that will inform the design of a cohesive, data-driven student success platform tailored to the HBCU context.
 ---
 
 ## Repository Structure
