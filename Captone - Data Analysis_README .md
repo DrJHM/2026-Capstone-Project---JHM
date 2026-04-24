@@ -6,7 +6,7 @@
 ---
 ## Overview
 
-This repository contains the statistical foundation of the **VanguardScholar** capstone project. VanguardScholar advances a central argument: Historically Black Colleges and Universities (HBCUs) are currently underserved by commercially dominant student success platforms — Navigate (EAB) and Starfish (Civitas Learning) — which were designed around the demographic and institutional profiles of Predominantly White Institutions (PWIs). A purpose-built HBCU student success platform is not merely preferable; it is **structurally necessary**.
+This repository contains the statistical foundation of my capstone project as a student of Howard University's Applied Data Science and Analytics Master's Program. This study advances a central argument: _Historically Black Colleges and Universities (HBCUs) are currently underserved by commercially dominant student success platforms designed around the demographic and institutional profiles of Predominantly White Institutions (PWIs). A purpose-built HBCU student success platform is not merely preferable; it is **structurally necessary**._
 ---
 
 ## Research Questions
