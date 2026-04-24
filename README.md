@@ -13,7 +13,7 @@ This repository contains the statistical foundation of my capstone project as a 
 ## Research Questions
 
 1. Do student success platforms that are designed for PWIs help HBCUs close gaps in retention and graduation rates? If not, what type of student success platform 
-would be more feasible and effective for HBCUs?
+would be more effective for HBCUs?
 
 **_## Deeper Inquiry_**
 
