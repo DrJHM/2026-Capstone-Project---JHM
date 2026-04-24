@@ -1,0 +1,398 @@
+# VanguardScholar — Machine Learning Pipeline
+### DATA 802 Capstone Practicum | Moulden College of Science & Technology
+
+---
+
+## Overview
+
+VanguardScholar is a data science capstone project examining which institution-level academic and student support indicators most strongly predict first-year retention and six-year graduation rates at Historically Black Colleges and Universities (HBCUs). This README documents the full machine learning pipeline — from feature engineering through model evaluation — as implemented for the DATA 802 practicum requirements.
+
+---
+
+## Table of Contents
+
+1. [Project Structure](#project-structure)
+2. [Data Preparation](#1-data-preparation--the-implementation)
+3. [Model Building](#2-model-building--the-tournament)
+4. [Model Evaluation](#3-model-evaluation--the-evidence)
+5. [Dependencies](#dependencies)
+6. [How to Run](#how-to-run)
+
+---
+
+## Project Structure
+
+```
+VanguardScholar/
+├── data/
+│   ├── raw/                  # Original IPEDS-sourced datasets
+│   └── processed/            # Cleaned, encoded, and scaled datasets
+├── notebooks/
+│   ├── 01_data_preparation.ipynb
+│   ├── 02_model_building.ipynb
+│   └── 03_model_evaluation.ipynb
+├── src/
+│   ├── feature_engineering.py
+│   ├── models.py
+│   └── evaluation.py
+├── outputs/
+│   ├── figures/              # Confusion matrices, feature importance plots
+│   └── reports/              # Model summary reports
+├── requirements.txt
+└── README.md
+```
+
+---
+
+## 1. Data Preparation — The Implementation
+
+### Feature Engineering
+
+Feature engineering implements the corrective fixes identified during the Statistics assignment phase, ensuring the data is properly prepared before any model training occurs.
+
+#### Encoding Categorical Variables
+
+Categorical variables are encoded using two strategies, selected based on the nature of each variable:
+
+- **One-Hot Encoding** is applied to nominal variables with no intrinsic order (e.g., institution type, region, platform adoption category). This creates binary indicator columns for each category and avoids implying any false ordinal relationship.
+
+  ```python
+  from sklearn.preprocessing import OneHotEncoder
+  encoder = OneHotEncoder(drop='first', sparse_output=False)
+  encoded = encoder.fit_transform(df[['platform_type', 'region']])
+  ```
+
+- **Label Encoding** is applied to binary or naturally ordinal categorical variables (e.g., HBCU designation: Yes/No, accreditation status).
+
+  ```python
+  from sklearn.preprocessing import LabelEncoder
+  le = LabelEncoder()
+  df['hbcu_flag'] = le.fit_transform(df['hbcu_flag'])
+  ```
+
+#### Scaling Numerical Features
+
+Numerical features are scaled where required by the algorithm. Distance-based and regularized models (e.g., Logistic Regression, K-Nearest Neighbors) are sensitive to feature magnitude and require scaling. Tree-based models (e.g., Random Forest) do not require it, but scaling is applied consistently to maintain pipeline integrity.
+
+- **StandardScaler** is the primary scaling method, transforming features to zero mean and unit variance:
+
+  ```python
+  from sklearn.preprocessing import StandardScaler
+  scaler = StandardScaler()
+  X_train_scaled = scaler.fit_transform(X_train)
+  X_test_scaled = scaler.transform(X_test)   # fit on train only — no leakage
+  ```
+
+- **MinMaxScaler** is applied as an alternative where non-negative bounded ranges are preferred (e.g., percentage-based features such as graduation rates used as inputs):
+
+  ```python
+  from sklearn.preprocessing import MinMaxScaler
+  mm_scaler = MinMaxScaler()
+  X_train_mm = mm_scaler.fit_transform(X_train)
+  X_test_mm = mm_scaler.transform(X_test)
+  ```
+
+> **Important:** Scalers are always fit *only* on the training set and applied to the test set. Fitting on the full dataset before splitting constitutes data leakage and is strictly avoided.
+
+#### Handling Class Imbalance
+
+Depending on the target variable (e.g., binary classification of whether an institution meets a retention threshold), class imbalance may be present given that high-performing HBCU institutions represent a smaller proportion of the dataset.
+
+Two strategies are implemented and compared:
+
+- **SMOTE (Synthetic Minority Oversampling Technique):** Generates synthetic samples for the minority class in the training data only.
+
+  ```python
+  from imblearn.over_sampling import SMOTE
+  smote = SMOTE(random_state=42)
+  X_train_resampled, y_train_resampled = smote.fit_resample(X_train, y_train)
+  ```
+
+- **Class Weights:** For algorithms that support it (e.g., Logistic Regression, Random Forest), `class_weight='balanced'` adjusts the loss function to penalize misclassification of the minority class more heavily — without altering the training data distribution.
+
+  ```python
+  model = LogisticRegression(class_weight='balanced', random_state=42)
+  ```
+
+---
+
+### Train/Test Split
+
+Data is strictly partitioned into training and testing sets prior to any preprocessing, encoding, or scaling. This boundary is maintained throughout the pipeline to prevent data leakage.
+
+```python
+from sklearn.model_selection import train_test_split
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y,
+    test_size=0.20,       # 80/20 split
+    random_state=42,
+    stratify=y            # preserves class distribution across both sets
+)
+```
+
+- **Split ratio:** 80% training / 20% testing
+- **Stratification:** Applied to ensure proportional class representation in both sets, particularly important given the relatively small HBCU sample size (N ≈ 51–100 institutions depending on filtering)
+- **Random seed:** Set to `42` for reproducibility across all runs
+
+---
+
+## 2. Model Building — The Tournament
+
+No single algorithm is assumed to be optimal. At least two algorithms appropriate to the prediction task are trained, tuned, and compared head-to-head.
+
+### Algorithms Compared
+
+#### For Classification Tasks (e.g., predicting whether an HBCU meets a retention threshold)
+
+| Model | Rationale |
+|---|---|
+| **Logistic Regression** | Interpretable baseline; works well with scaled features; produces probability estimates |
+| **Random Forest Classifier** | Handles non-linear relationships; robust to outliers; provides native feature importance scores |
+
+#### For Regression Tasks (e.g., predicting six-year graduation rate as a continuous outcome)
+
+| Model | Rationale |
+|---|---|
+| **Linear Regression** | Interpretable baseline; establishes benchmark for coefficient-based inference |
+| **XGBoost Regressor** | Captures non-linear interactions; strong predictive performance; gradient boosting handles complex feature relationships |
+
+---
+
+### Hyperparameter Tuning
+
+Basic hyperparameter tuning is demonstrated for each model. The goal is to document the effect of key parameters on model performance and identify configurations that improve generalization without overfitting.
+
+#### Random Forest — `max_depth` tuning
+
+```python
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import cross_val_score
+
+for depth in [3, 5, 10, None]:
+    rf = RandomForestClassifier(max_depth=depth, n_estimators=100, random_state=42)
+    scores = cross_val_score(rf, X_train, y_train, cv=5, scoring='f1_weighted')
+    print(f"max_depth={depth} | Mean F1: {scores.mean():.4f} ± {scores.std():.4f}")
+```
+
+#### Logistic Regression — Regularization strength `C`
+
+```python
+from sklearn.linear_model import LogisticRegression
+
+for C_val in [0.01, 0.1, 1.0, 10.0]:
+    lr = LogisticRegression(C=C_val, max_iter=1000, random_state=42)
+    scores = cross_val_score(lr, X_train_scaled, y_train, cv=5, scoring='f1_weighted')
+    print(f"C={C_val} | Mean F1: {scores.mean():.4f}")
+```
+
+#### XGBoost — `n_estimators` and `max_depth`
+
+```python
+import xgboost as xgb
+
+for n_est, depth in [(50, 3), (100, 5), (200, 6)]:
+    xgb_model = xgb.XGBRegressor(n_estimators=n_est, max_depth=depth,
+                                  learning_rate=0.1, random_state=42)
+    scores = cross_val_score(xgb_model, X_train, y_train, cv=5, scoring='r2')
+    print(f"n_estimators={n_est}, max_depth={depth} | Mean R²: {scores.mean():.4f}")
+```
+
+The best-performing hyperparameter configuration for each model is selected and used for final evaluation on the held-out test set.
+
+---
+
+## 3. Model Evaluation — The Evidence
+
+### Metrics
+
+Accuracy alone is insufficient and misleading — particularly in imbalanced datasets or when false negatives carry real institutional costs. The following metrics are required and reported for all models.
+
+#### Classification Metrics
+
+**Confusion Matrix** — visualizes true positives, false positives, true negatives, and false negatives across predicted and actual classes.
+
+```python
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+import matplotlib.pyplot as plt
+
+cm = confusion_matrix(y_test, y_pred)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=model.classes_)
+disp.plot(cmap='Blues')
+plt.title("Confusion Matrix — Random Forest")
+plt.savefig("outputs/figures/confusion_matrix_rf.png", dpi=150, bbox_inches='tight')
+plt.show()
+```
+
+**Precision, Recall, and F1-Score** — reported per class and as weighted averages.
+
+```python
+from sklearn.metrics import classification_report
+
+print(classification_report(y_test, y_pred, target_names=['Below Threshold', 'Meets Threshold']))
+```
+
+| Metric | Definition | Why It Matters Here |
+|---|---|---|
+| **Precision** | Of all predicted "meets threshold," how many actually did? | Avoids falsely flagging institutions as high-performing |
+| **Recall** | Of all institutions that truly met the threshold, how many were identified? | Avoids missing genuinely strong HBCU performers |
+| **F1-Score** | Harmonic mean of Precision and Recall | Balances both concerns in a single score |
+
+---
+
+#### Regression Metrics
+
+**RMSE (Root Mean Squared Error)** — measures average prediction error in the same units as the outcome variable (graduation rate %).
+
+```python
+from sklearn.metrics import mean_squared_error
+import numpy as np
+
+rmse = np.sqrt(mean_squared_error(y_test, y_pred))
+print(f"RMSE: {rmse:.4f}")
+```
+
+**R² (Coefficient of Determination)** — proportion of variance in the graduation rate explained by the model.
+
+```python
+from sklearn.metrics import r2_score
+
+r2 = r2_score(y_test, y_pred)
+print(f"R²: {r2:.4f}")
+```
+
+---
+
+### Model Interpretation Summary
+
+After all models are evaluated on the test set, a written summary is produced comparing their relative performance. The summary addresses:
+
+- Which model achieved superior performance, and on which metrics
+- Whether the performance difference is meaningful given the dataset size and research context
+- Trade-offs between model interpretability (Logistic Regression, Linear Regression) and predictive power (Random Forest, XGBoost)
+- Whether SMOTE or class weighting improved minority-class recall without sacrificing overall F1-Score
+- Practical implications for HBCU student success platform recommendations
+
+> **Example Summary (template):**
+> *The Random Forest Classifier outperformed Logistic Regression on F1-Score (0.78 vs. 0.71) and Recall for the minority class (0.74 vs. 0.62), suggesting it better captures the non-linear relationships between endowment per student, platform adoption, and retention outcomes. However, Logistic Regression remains preferable for institutional reporting due to its coefficient interpretability. For regression, XGBoost produced a lower RMSE (4.21 vs. 6.38) and higher R² (0.81 vs. 0.63) compared to Linear Regression, indicating that graduation rate is better explained by non-linear feature interactions.*
+
+---
+
+### Feature Importance
+
+Feature importance is extracted and visualized for each model to identify which institutional variables are the strongest predictors of student success outcomes.
+
+#### Random Forest — Built-in Feature Importances
+
+```python
+import pandas as pd
+import matplotlib.pyplot as plt
+
+importances = pd.Series(rf_model.feature_importances_, index=feature_names)
+importances_sorted = importances.sort_values(ascending=False).head(15)
+
+plt.figure(figsize=(10, 6))
+importances_sorted.plot(kind='barh', color='steelblue')
+plt.gca().invert_yaxis()
+plt.title("Feature Importance — Random Forest Classifier")
+plt.xlabel("Importance Score")
+plt.tight_layout()
+plt.savefig("outputs/figures/feature_importance_rf.png", dpi=150, bbox_inches='tight')
+plt.show()
+```
+
+#### Logistic Regression — Coefficients
+
+```python
+coef_df = pd.DataFrame({
+    'Feature': feature_names,
+    'Coefficient': lr_model.coef_[0]
+}).sort_values('Coefficient', ascending=False)
+
+plt.figure(figsize=(10, 6))
+coef_df.set_index('Feature')['Coefficient'].plot(kind='barh', color='darkorange')
+plt.gca().invert_yaxis()
+plt.axvline(0, color='black', linewidth=0.8)
+plt.title("Logistic Regression Coefficients")
+plt.xlabel("Coefficient Value")
+plt.tight_layout()
+plt.savefig("outputs/figures/lr_coefficients.png", dpi=150, bbox_inches='tight')
+plt.show()
+```
+
+#### XGBoost — Built-in Feature Importances
+
+```python
+xgb.plot_importance(xgb_model, max_num_features=15, importance_type='gain',
+                    title='XGBoost Feature Importance (Gain)')
+plt.tight_layout()
+plt.savefig("outputs/figures/feature_importance_xgb.png", dpi=150, bbox_inches='tight')
+plt.show()
+```
+
+The feature importance outputs are interpreted in the context of HBCU institutional equity — identifying whether endowment per student, early alert platform adoption (Navigate360, Starfish), or advising ratios emerge as the most predictive variables.
+
+---
+
+## Dependencies
+
+```
+pandas>=2.0
+numpy>=1.24
+scikit-learn>=1.3
+imbalanced-learn>=0.11
+xgboost>=2.0
+matplotlib>=3.7
+seaborn>=0.12
+openpyxl>=3.1
+```
+
+Install all dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+> **Note for macOS/PyCharm users:** If encountering SSL certificate errors during pip installs, run:
+> ```bash
+> pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org -r requirements.txt
+> ```
+
+---
+
+## How to Run
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/[your-repo]/VanguardScholar.git
+cd VanguardScholar
+
+# 2. Install dependencies
+pip install -r requirements.txt
+
+# 3. Run notebooks in order
+jupyter notebook notebooks/01_data_preparation.ipynb
+jupyter notebook notebooks/02_model_building.ipynb
+jupyter notebook notebooks/03_model_evaluation.ipynb
+```
+
+Or run the full pipeline end-to-end via script:
+
+```bash
+python src/feature_engineering.py
+python src/models.py
+python src/evaluation.py
+```
+
+---
+
+## Author
+
+**Dr. Joycelyn Hughes-Moulden**
+DATA 802 Practicum | Spring 2026
+Moulden College of Science & Technology
+Site Placement: Howard University School of Education
+
+---
+
+*This project is part of a larger capstone arguing that HBCUs require a purpose-built student success platform — VanguardScholar — rather than adapted tools designed around Predominantly White Institution (PWI) models.*
