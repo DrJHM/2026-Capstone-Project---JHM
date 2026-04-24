@@ -1,9 +1,8 @@
-# Exploratory Data Analysis & Pre-ML Diagnostics
-
-**Spring 2026 - DATA 801 Capstone Project** - 
 **Joycelyn Hughes-Moulden** - 
+**Spring 2026 - DATA 801 Capstone Project** - 
 **Applied Data Science and Analytics Master's Program**
 
+# Exploratory Data Analysis & Pre-ML Diagnostics
 
 ---
 ## Overview
