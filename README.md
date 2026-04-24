@@ -15,7 +15,7 @@ This repository contains the statistical foundation of my capstone project as a 
 1. Do student success platforms that are designed for PWIs help HBCUs close gaps in retention and graduation rates? If not, what type of student success platform 
 would be more feasible and effective for HBCUs?
 
-_#**#Deeper Inquiry**_
+##_**#Deeper Inquiry**_
 3. Which institution-level academic and student support indicators correlate most strongly with **first-year retention** and **six-year graduation rates** at HBCUs?
 4. Do HBCUs and PWIs differ significantly on key student success outcomes — and if so, does the pattern suggest that platform adoption alone cannot close the gap?
 5. What structural data quality issues (multicollinearity, imbalance, missing data) must be diagnosed and remediated before building predictive ML models?
