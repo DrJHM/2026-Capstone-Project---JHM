@@ -107,18 +107,23 @@ The evidence reinforces the central thesis:
 
 ## How to Run
 
-1. Clone the repository
-```bash
-git clone https://github.com/DrJHM/2026-Capstone-Project---JHM.git
-cd 2026-Capstone-Project---JHM
-```
+**Requirements:** Python 3.9 or higher
 
-2. Install dependencies
-```bash
-pip install pandas numpy matplotlib seaborn scipy statsmodels
-```
+**1. Get the repository files**
 
-3. Open the notebook
+   **Option A — Using Git:**
+   ```bash
+   git clone https://github.com/DrJHM/2026-Capstone-Project---JHM.git
+   cd 2026-Capstone-Project---JHM
+   ```
+   **Option B — No Git required:**
+   Click the green **Code** button on the repository page → **Download ZIP** → unzip the folder on your computer, then continue to Step 2.
+
+**2. Install dependencies**
+```bash
+pip install pandas numpy matplotlib seaborn scipy statsmodels jupyter
+```
+**3. Open the notebook**
 ```bash
 jupyter notebook Spring_2026_-_Capstone.ipynb
 ```
@@ -142,4 +147,4 @@ DATA 801 Capstone Project | Howard University | Spring 2026
 
 ---
 
-*VanguardScholar is a data science capstone project examining student success platform equity at HBCUs. All data is drawn from publicly available institutional sources.*
+*This is a data science capstone project examining student success platform equity at HBCUs. All data is drawn from publicly available institutional sources.*
