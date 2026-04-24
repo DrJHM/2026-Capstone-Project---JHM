@@ -136,9 +136,8 @@ jupyter notebook Spring_2026_-_Capstone.ipynb
 ---
 
 ## Author
-
-**Dr. Joycelyn Hughes-Moulden**
-DATA 801 Capstone | Moulden College of Science & Technology | Spring 2026
+**Joycelyn Hughes-Moulden**
+DATA 802 Capstone | Howard University | Spring 2026
 
 ---
 
