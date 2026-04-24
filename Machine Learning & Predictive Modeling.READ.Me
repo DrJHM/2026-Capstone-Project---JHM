@@ -1,16 +1,15 @@
-# VanguardScholar — Machine Learning Pipeline
-### DATA 802 Capstone Practicum | Moulden College of Science & Technology
+# HBCU Student Success Platform - Machine Learning Pipeline
+### DATA 801 Capstone Project
 
 ---
 
 ## Overview
-
-VanguardScholar is a data science capstone project examining which institution-level academic and student support indicators most strongly predict first-year retention and six-year graduation rates at Historically Black Colleges and Universities (HBCUs). This README documents the full machine learning pipeline — from feature engineering through model evaluation — as implemented for the DATA 802 practicum requirements.
+This study is a data science capstone project examining which institution-level academic and student support indicators most strongly predict first-year retention and six-year graduation rates at 
+Historically Black Colleges and Universities (HBCUs). This README documents the full machine learning pipeline — from feature engineering through model evaluation.
 
 ---
 
-## Table of Contents
-
+##Table of Contents
 1. [Project Structure](#project-structure)
 2. [Data Preparation](#1-data-preparation--the-implementation)
 3. [Model Building](#2-model-building--the-tournament)
@@ -20,7 +19,7 @@ VanguardScholar is a data science capstone project examining which institution-l
 
 ---
 
-## Project Structure
+##Project Structure
 
 ```
 VanguardScholar/
@@ -44,7 +43,7 @@ VanguardScholar/
 
 ---
 
-## 1. Data Preparation — The Implementation
+##1. Data Preparation — The Implementation
 
 ### Feature Engineering
 
@@ -70,7 +69,7 @@ Categorical variables are encoded using two strategies, selected based on the na
   df['hbcu_flag'] = le.fit_transform(df['hbcu_flag'])
   ```
 
-#### Scaling Numerical Features
+####Scaling Numerical Features
 
 Numerical features are scaled where required by the algorithm. Distance-based and regularized models (e.g., Logistic Regression, K-Nearest Neighbors) are sensitive to feature magnitude and require scaling. Tree-based models (e.g., Random Forest) do not require it, but scaling is applied consistently to maintain pipeline integrity.
 
@@ -141,9 +140,9 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 No single algorithm is assumed to be optimal. At least two algorithms appropriate to the prediction task are trained, tuned, and compared head-to-head.
 
-### Algorithms Compared
+###Algorithms Compared
 
-#### For Classification Tasks (e.g., predicting whether an HBCU meets a retention threshold)
+####For Classification Tasks (e.g., predicting whether an HBCU meets a retention threshold)
 
 | Model | Rationale |
 |---|---|
@@ -264,7 +263,6 @@ print(f"R²: {r2:.4f}")
 ---
 
 ### Model Interpretation Summary
-
 After all models are evaluated on the test set, a written summary is produced comparing their relative performance. The summary addresses:
 
 - Which model achieved superior performance, and on which metrics
@@ -279,7 +277,6 @@ After all models are evaluated on the test set, a written summary is produced co
 ---
 
 ### Feature Importance
-
 Feature importance is extracted and visualized for each model to identify which institutional variables are the strongest predictors of student success outcomes.
 
 #### Random Forest — Built-in Feature Importances
@@ -301,7 +298,7 @@ plt.savefig("outputs/figures/feature_importance_rf.png", dpi=150, bbox_inches='t
 plt.show()
 ```
 
-#### Logistic Regression — Coefficients
+####Logistic Regression — Coefficients
 
 ```python
 coef_df = pd.DataFrame({
@@ -320,7 +317,7 @@ plt.savefig("outputs/figures/lr_coefficients.png", dpi=150, bbox_inches='tight')
 plt.show()
 ```
 
-#### XGBoost — Built-in Feature Importances
+####XGBoost — Built-in Feature Importances
 
 ```python
 xgb.plot_importance(xgb_model, max_num_features=15, importance_type='gain',
@@ -334,7 +331,7 @@ The feature importance outputs are interpreted in the context of HBCU institutio
 
 ---
 
-## Dependencies
+##Dependencies
 
 ```
 pandas>=2.0
@@ -360,11 +357,10 @@ pip install -r requirements.txt
 
 ---
 
-## How to Run
-
+##How to Run
 ```bash
 # 1. Clone the repository
-git clone https://github.com/[your-repo]/VanguardScholar.git
+git clone https://github.com/[your-repo]/HBCUScholar.git
 cd VanguardScholar
 
 # 2. Install dependencies
@@ -383,16 +379,4 @@ python src/feature_engineering.py
 python src/models.py
 python src/evaluation.py
 ```
-
----
-
-## Author
-
-**Dr. Joycelyn Hughes-Moulden**
-DATA 802 Practicum | Spring 2026
-Moulden College of Science & Technology
-Site Placement: Howard University School of Education
-
----
-
 *This project is part of a larger capstone arguing that HBCUs require a purpose-built student success platform — VanguardScholar — rather than adapted tools designed around Predominantly White Institution (PWI) models.*
